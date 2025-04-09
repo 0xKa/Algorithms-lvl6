@@ -36,7 +36,7 @@ public class BinaryTree<T>
           and each parent node has at most two children before moving on to the next node in the 
           sequence.
     */
-    public void Insert(BinaryTreeNode<T> NewNode)
+    public virtual void Insert(BinaryTreeNode<T> NewNode)
     {
         if (this.Root == null)
         {
@@ -79,7 +79,7 @@ public class BinaryTree<T>
 
 
     }
-    public void Insert(T NewNodeValue)
+    public virtual void Insert(T NewNodeValue)
     {
         this.Insert(new BinaryTreeNode<T>(NewNodeValue));
     }
@@ -229,7 +229,7 @@ public class BinaryTree<T>
     /// InOrder Traversal ///
     public void InOrderTraversal()
     {
-        Console.WriteLine("\nPostOrder Traversal: left -> root -> right");
+        Console.WriteLine("\nInOrder Traversal: left -> root -> right");
         InOrderTraversal(Root);
         Console.WriteLine();
     }
