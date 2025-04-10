@@ -1,0 +1,241 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO.Pipes;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
+
+/// AVL Tree is a Balanced BST ///
+
+public class AVLNode<T>
+{
+    public T Value { get; set; }
+    public AVLNode<T> Left { get; set; }
+    public AVLNode<T> Right { get; set; }
+    public int Height { get; set; }
+
+    public AVLNode(T value)
+    {
+        this.Value = value;
+        this.Height = 1;
+    }
+
+
+}
+
+public class AVLTree<T> : BinaryTree<T> where T : IComparable<T>
+{
+    private new AVLNode<T> Root;
+
+    
+    public override void Insert(BinaryTreeNode<T> node)
+    {
+        this.Insert(node.Value);
+    }
+    public void Insert(AVLNode<T> node)
+    {
+        this.Insert(node.Value);
+    }
+    public override void Insert(T Value)
+    {
+        Root = Insert(Root, Value);
+    }
+
+    private AVLNode<T> Insert(AVLNode<T> node, T value)
+    {
+        if (node == null) 
+            return new AVLNode<T>(value);
+
+        if (value.CompareTo(node.Value) < 0)
+            node.Left = Insert(node.Left, value);
+        else if (value.CompareTo(node.Value) > 0)
+            node.Right = Insert(node.Right, value);
+        else
+            return node;
+
+        UpdateHeight(node);
+
+        return Balance(node);
+    }
+
+    private void UpdateHeight(AVLNode<T> node) => 
+        node.Height = 1 + Math.Max(Height(node.Left), Height(node.Right));
+    
+    private int Height(AVLNode<T> node) => 
+        (node != null) ? node.Height : 0;
+
+    private int GetBalanceFactor(AVLNode<T> node) =>
+        (node != null) ? Height(node.Left) - Height(node.Right) : 0;
+
+    private AVLNode<T> Balance(AVLNode<T> node)
+    {
+        int BalanceFactor = GetBalanceFactor(node);
+
+        //decide which rotation to use
+
+        // Right Rotation (RR) Case: Parent BF = -2, Right Child BF= -1 or 0
+        if (BalanceFactor < -1 && GetBalanceFactor(node.Right) <= 0)
+            return LeftRotate(node);
+        
+        // Left Rotation (LL) Case: Parent BF = 2, Left Child BF= 1 or 0
+        if (BalanceFactor > 1 && GetBalanceFactor(node.Left) >= 0)
+            return RightRotate(node);
+
+        // Left-Right Rotation (LR) Case: Parent BF = 2, Left Child BF= -1
+        if (BalanceFactor > 1 && GetBalanceFactor(node.Left) < 0)
+        {
+            node.Left = LeftRotate(node.Left);
+
+            return RightRotate(node);
+        }
+
+
+        // Right-Left Rotation (RL) Case: Parent BF = -2, Right Child BF= 1
+        if (BalanceFactor < -1 && GetBalanceFactor(node.Right) > 0)
+        {
+            node.Right = RightRotate(node.Right);
+
+            return LeftRotate(node);
+        }
+        return node;
+    }
+
+
+    private AVLNode<T> RightRotate(AVLNode<T> OriginalRoot)
+    {
+        AVLNode<T> NewRoot  = OriginalRoot.Left;
+        AVLNode<T> OriginalRightChild  = NewRoot.Right;
+
+        NewRoot.Right = OriginalRoot;
+        OriginalRoot.Left = OriginalRightChild;
+
+        UpdateHeight(OriginalRoot);
+        UpdateHeight(NewRoot);
+        return NewRoot;
+    }
+    private AVLNode<T> LeftRotate(AVLNode<T> OriginalRoot)
+    {
+        AVLNode<T> NewRoot = OriginalRoot.Right;
+        AVLNode<T> OriginalLeftChild = NewRoot.Left;
+
+        NewRoot.Left = OriginalRoot;
+        OriginalRoot.Right = OriginalLeftChild;
+
+        UpdateHeight(OriginalRoot);
+        UpdateHeight(NewRoot);
+        return NewRoot;
+    }
+
+
+    public override void PrintStructure()
+    {
+        Console.WriteLine("\nAVL Tree Structure:");
+
+        if (Root == null)
+        {
+            Console.WriteLine("Tree is empty.");
+            return;
+        }
+
+        Queue<AVLNode<T>> queue = new Queue<AVLNode<T>>();
+        queue.Enqueue(Root);
+        int level = 0;
+
+        while (queue.Count > 0)
+        {
+            int levelSize = queue.Count;
+            Console.Write("Level " + level + ": ");
+
+            for (int i = 0; i < levelSize; i++)
+            {
+                AVLNode<T> current = queue.Dequeue();
+                Console.Write(current.Value + " ");
+
+                if (current.Left != null)
+                    queue.Enqueue(current.Left);
+
+                if (current.Right != null)
+                    queue.Enqueue(current.Right);
+            }
+            Console.WriteLine(); // Move to the next level
+            level++;
+        }
+    }
+
+    public override void PrintTree()
+    {
+        Console.WriteLine();
+        PrintTree(this.Root, "", true);
+    }
+    private void PrintTree(AVLNode<T> node, string indent, bool last)
+    {
+        if (node != null)
+        {
+            Console.Write(indent);
+            if (last)
+            {
+                Console.Write("R----");
+                indent += "     ";
+            }
+            else
+            {
+                Console.Write("L----");
+                indent += "|    ";
+            }
+            Console.WriteLine(node.Value);
+            PrintTree(node.Left, indent, false);
+            PrintTree(node.Right, indent, true);
+        }
+    }
+
+}
+
+internal class Program
+{
+    static void Main(string[] args)
+    {
+        AVLTree<int> avlTree = new AVLTree<int>();
+
+        //RR
+        int[] values1 = { 10, 20, 30 };
+
+        //LL
+        int[] values2 = { 30, 20, 10 };
+
+        //LR
+        int[] values3 = { 30, 10, 20 };
+
+        //RL
+        int[] values4 = { 10, 30, 20 };
+
+        //
+        int[] values = { 10, 20, 30, 40 ,50 , 25, 432,43,5,1,75};
+       
+        foreach (int value in values)
+        {
+            Console.WriteLine($"Inserting {value} into the AVL tree...");
+            avlTree.Insert(value);
+
+            avlTree.PrintStructure();
+            avlTree.PrintTree();
+
+            Console.WriteLine("--------------------------------------");
+
+        }
+
+
+    }
+}
+
+/* AVL Tree 
+Introduction to AVL Trees
+    AVL trees, named after their inventors Adelson-Velsky and Landis, are self-balancing binary search trees. In an AVL tree, the heights of the two child subtrees of any node differ by no more than one. If at any time they differ by more than one, rebalancing is done to restore this property.
+
+Key Concepts
+It's important to understand some key concepts:
+    Balance Factor: The difference between the heights of the left and right subtrees. It helps in deciding whether a subtree needs rebalancing.
+    Height of a Tree: The height of a node is the number of edges on the longest downward path between that node and a leaf.
+    Balance Factor = Difference between Hight(Left Subtree) - Hight(Right Subtree)
+    If Abs(BF) > 1 then tree is not balanced, otherwise it is balanced.
+ */

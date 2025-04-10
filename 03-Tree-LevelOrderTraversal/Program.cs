@@ -103,7 +103,7 @@ public class BinaryTree<T>
     /// <summary>
     /// Method to visually print the tree structure
     /// </summary>
-    public void PrintStructure()
+    public virtual void PrintStructure()
     {
         Console.WriteLine("\nBinary Tree Structure:");
 
@@ -141,7 +141,7 @@ public class BinaryTree<T>
     /// <summary>
     /// Method to visually print the tree visualy
     /// </summary>
-    public void PrintTree()
+    public virtual void PrintTree()
     {
         Console.WriteLine("\nBinary Tree:");
         PrintTree(this.Root, 0);
