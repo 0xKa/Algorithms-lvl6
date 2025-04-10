@@ -275,11 +275,43 @@ public class AVLTree<T> : BinaryTree<T> where T : IComparable<T>
         }
     }
 
+
+    //Auto Complete feature for strings 
+    public List<T> AutoComplete(T prefix)
+    {
+        List<T> results = new List<T>();
+        AutoComplete(Root, prefix, results);
+        return results;
+    }
+    private void AutoComplete(AVLNode<T> node, T prefix, List<T> results)
+    {
+        if (node != null)
+        {
+            if (node.Value.ToString().StartsWith(prefix.ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+                results.Add(node.Value);
+                AutoComplete(node.Left, prefix, results);
+                AutoComplete(node.Right, prefix, results);
+            }
+            else
+            {
+                // If the current node's value does not start with the prefix,
+                // the method decides which subtree to explore next based on alphabetical order:
+                // If the prefix is lexicographically smaller than the node's value, it recurses into the left subtree, as any potential matches must be in the left due to the properties of the binary search tree (BST).
+                // Conversely, if the prefix is larger, it searches the right subtree.
+
+                if (string.Compare(prefix.ToString(), node.Value.ToString(), StringComparison.OrdinalIgnoreCase) < 0)
+                    AutoComplete(node.Left, prefix, results);
+                else
+                    AutoComplete(node.Right, prefix, results);
+            }
+        }
+    }
 }
 
 internal class Program
 {
-    static void Main(string[] args)
+    public static void Test_Operations()
     {
         AVLTree<int> avlTree = new AVLTree<int>();
 
@@ -297,7 +329,7 @@ internal class Program
 
         //
         int[] values = { 10, 20, 30, 40, 50, 25, 432, 43, 5, 1, 75 };
-       
+
         foreach (int value in values)
         {
             Console.WriteLine($"Inserting {value} into the AVL tree...");
@@ -323,12 +355,43 @@ internal class Program
         Console.WriteLine("\nSearching for Value: [50]");
         Console.WriteLine("Search() Result: " + avlTree.Search(50));
 
-        
+
         Console.WriteLine("\nIs Exists -> Value: [20]");
         Console.WriteLine("Exists() Result: " + avlTree.Exists(20));
 
         Console.WriteLine("\nSearching for Value: [20]");
         Console.WriteLine("Search() Result: " + avlTree.Search(20).Value);
+    }
+
+    public static void Test_AutoCompleteFeature()
+    {
+        AVLTree<string> avlTree = new AVLTree<string>();
+        string[] names = { "Reda", "Ahmed", "Khalid", "Salim", "Fahed", "Mohammed", "Omar", "Ali", "Issa", "Yousif", "Abdullah", "Marwan", "Nasser" };
+
+        foreach (string name in names)
+        {
+            avlTree.Insert(name);
+        }
+
+        avlTree.PrintTree();
+
+
+        Console.WriteLine("\nEnter a prefix to search:");
+        string prefix = Console.ReadLine();
+ 
+        var completions = avlTree.AutoComplete(prefix);
+        Console.WriteLine($"\nSuggestions for '{prefix}':\n");
+        foreach (var completion in completions)
+        {
+            Console.WriteLine(completion);
+        }
+
+
+    }
+    static void Main(string[] args)
+    {
+        //Test_Operations();
+        Test_AutoCompleteFeature();
 
 
     }
