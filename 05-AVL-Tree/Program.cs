@@ -128,6 +128,54 @@ public class AVLTree<T> : BinaryTree<T> where T : IComparable<T>
     }
 
 
+
+    public void Delete(T value)
+    {
+        Root = DeleteNode(Root,  value);
+    }
+    public AVLNode<T> DeleteNode(AVLNode<T> Node, T value)
+    {
+        if (Node == null) return Node;
+
+        //to delete nodes in AVL tree, we perform standerd BST tree deletion then we Balance() the tree
+        if (value.CompareTo(Node.Value) < 0)
+            Node.Left = DeleteNode(Node.Left, value);
+        else if (value.CompareTo(Node.Value) > 0)
+            Node.Right = DeleteNode(Node.Right, value);
+        else
+        {
+
+
+            // Case 2: Node has one child
+            if (Node.Left == null)
+                return Node.Right;
+            else if (Node.Right == null)
+                return Node.Left;
+
+            // Case 3: Node has two children
+            AVLNode<T> temp = FindMinValueChild(Node.Right);
+            Node.Value = temp.Value;
+            Node.Right = DeleteNode(Node.Right, temp.Value);
+
+        }
+
+        UpdateHeight(Node);
+        return Balance(Node);
+    }
+    private AVLNode<T> FindMinValueChild(AVLNode<T> node)
+    {
+        AVLNode<T> current = node;
+
+        // Go down to the leftmost leaf
+        while (current.Left != null)
+        {
+            current = current.Left;
+        }
+
+        return current;
+    }
+
+
     public override void PrintStructure()
     {
         Console.WriteLine("\nAVL Tree Structure:");
@@ -210,7 +258,7 @@ internal class Program
         int[] values4 = { 10, 30, 20 };
 
         //
-        int[] values = { 10, 20, 30, 40 ,50 , 25, 432,43,5,1,75};
+        int[] values = { 10, 20, 30, 40, 50, 25, 432, 43, 5, 1, 75 };
        
         foreach (int value in values)
         {
@@ -224,6 +272,11 @@ internal class Program
 
         }
 
+
+        Console.WriteLine("Deleteing Value: [50]");
+        avlTree.Delete(50);
+        avlTree.PrintStructure();
+        avlTree.PrintTree();
 
     }
 }
