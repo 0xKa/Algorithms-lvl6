@@ -5,8 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 
 /// AVL Tree is a Balanced BST ///
+
+/// AVL Tree Time Complexity (insert, delete, search):
+/// All Cases: O(log n)
 
 public class AVLNode<T>
 {
@@ -128,7 +132,6 @@ public class AVLTree<T> : BinaryTree<T> where T : IComparable<T>
     }
 
 
-
     public void Delete(T value)
     {
         Root = DeleteNode(Root,  value);
@@ -173,6 +176,41 @@ public class AVLTree<T> : BinaryTree<T> where T : IComparable<T>
         }
 
         return current;
+    }
+
+    public AVLNode<T> Search(T value)
+    {
+        return Search(Root, value);
+    }
+    private AVLNode<T> Search(AVLNode<T> node, T value)
+    {
+        if (node == null)
+            return null; 
+
+        if (value.CompareTo(node.Value) < 0)
+            return Search(node.Left, value); 
+        else if (value.CompareTo(node.Value) > 0)
+            return Search(node.Right, value);
+        else
+            return node; 
+    }
+
+
+    public bool Exists(T value)
+    {
+        return Exists(Root, value);
+    }
+    private bool Exists(AVLNode<T> node, T value)
+    {
+        if (node == null)
+            return false;
+
+        if (value.CompareTo(node.Value) < 0)
+            return Exists(node.Left, value);
+        else if (value.CompareTo(node.Value) > 0)
+            return Exists(node.Right, value);
+        else
+            return true;
     }
 
 
@@ -277,6 +315,21 @@ internal class Program
         avlTree.Delete(50);
         avlTree.PrintStructure();
         avlTree.PrintTree();
+
+
+        Console.WriteLine("\nIs Exists -> Value: [50]");
+        Console.WriteLine("Exists() Result: " + avlTree.Exists(50));
+
+        Console.WriteLine("\nSearching for Value: [50]");
+        Console.WriteLine("Search() Result: " + avlTree.Search(50));
+
+        
+        Console.WriteLine("\nIs Exists -> Value: [20]");
+        Console.WriteLine("Exists() Result: " + avlTree.Exists(20));
+
+        Console.WriteLine("\nSearching for Value: [20]");
+        Console.WriteLine("Search() Result: " + avlTree.Search(20).Value);
+
 
     }
 }
