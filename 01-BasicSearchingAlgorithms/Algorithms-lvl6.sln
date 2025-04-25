@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "05-AVL-Tree", "..\05-AVL-Tr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "06-Red-Black-Tree", "..\06-Red-Black-Tree\06-Red-Black-Tree.csproj", "{1073E723-7A29-4944-8939-E30E669612EF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "07-Graph-Traversals", "..\07-Graph-Traversals\07-Graph-Traversals.csproj", "{FB0C97F1-C31C-4AC2-83C4-F788149BB625}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{1073E723-7A29-4944-8939-E30E669612EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1073E723-7A29-4944-8939-E30E669612EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1073E723-7A29-4944-8939-E30E669612EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB0C97F1-C31C-4AC2-83C4-F788149BB625}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB0C97F1-C31C-4AC2-83C4-F788149BB625}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB0C97F1-C31C-4AC2-83C4-F788149BB625}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB0C97F1-C31C-4AC2-83C4-F788149BB625}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
